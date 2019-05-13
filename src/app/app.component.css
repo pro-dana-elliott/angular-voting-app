@@ -1,0 +1,36 @@
+.row {
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.item-label {
+  font-weight: bold;
+}
+
+.component {
+  margin-top: 2rem;
+}
+
+input.ng-invalid.ng-touched {
+  border: 1px solid red;
+}
+
+.error-area {
+  border: 1px solid red;
+  margin: 0.25rem;
+  padding: 0.25rem;
+}
+
+.error-msg {
+  color: red;
+}
+
+.btn-edit {
+  margin-left:  1rem;
+}
+
+.wait {
+  cursor: wait;
+}
+

@@ -1,20 +1,86 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="container" style="margin-bottom: 10px">
+  <div class="row">
+    <div class="col-12"><h1>Voting App</h1></div>
+  </div>
+    <div class="row">
+    <div class="col-12"><h2>Options</h2></div>
+  </div>
 
+  <div class="row">
+     <div class="col-xs-12">
+       <div class="input-group">
+          <div class="input-group-prepend mr-2">
+            <label class="item-label">Voting Type</label>
+          </div>
+          <select name="votetype" class="custom-select" id="inputGroupSelect03"
+                  [(ngModel)]="votingType" (change)="isTaskDone = false" [disabled]="isCalculating"  aria-label="Select Voting Type">
+            <option value="standard">Standard</option>
+            <option value="instantrunoff">Ranked Voting</option>
+          </select>
+      </div>
+     </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="input-group">
+          <div class="input-group-prepend mr-2">
+            <label for="nofv" class="item-label">Number of Voters</label>
+          </div>
+          <input type="number" name="nofv" id="nofv"
+                 [(ngModel)]="numOfVoters" (keyup)="isTaskDone = false" (change)="isTaskDone = false"
+                 class="form-control"  [disabled]="isCalculating"
+                 ngModel  #numberofvoters="ngModel" required [cusMinValidate]="candidatesService.numberOfCandidates + 1">
+          <span class="error-msg" *ngIf="!numberofvoters.valid && numberofvoters.touched && !isCalculating">Please enter at least {{candidatesService.numberOfCandidates + 1}} voters.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="input-group">
+          <input type="text" [(ngModel)]="newName" class="form-control" placeholder="candidate name" (keyup.enter)="addName()"
+            [disabled]="isCalculating || candidatesService.isMaxNumberOfCandidates">
+          <div class="input-group-append">
+            <button type="button" class="btn btn-primary"  (click)="addName()"  [disabled]="isCalculating || candidatesService.isMaxNumberOfCandidates">Add</button>
+          </div>
+          <div>
+            <button type="button" class="btn btn-edit" (click)="isEdit = !isEdit; isTaskDone = false;"
+                   [ngClass]="{'btn-primary': !isEdit, 'btn-success': isEdit}" [disabled]="isCalculating">Edit</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template [ngIf]="!isTaskDone && !isCalculating">
+      <div [ngClass]="{'error-area': candidatesService.numberOfCandidates < 2}">
+      <app-candidate-info *ngFor="let item of candidates; let i = index;"
+                          [candidate]="item" [index]="i" [isEdit]="isEdit"></app-candidate-info>
+      </div>
+      <span class="error-msg" *ngIf="candidatesService.numberOfCandidates < 2">Must have at least two candidates</span>
+  </ng-template>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <button type="button" class="btn btn-primary" (click)="run()" style="margin-top: 5px;"
+              [disabled]=" candidatesService.numberOfCandidates < 2 || numOfVoters < candidatesService.numberOfCandidates + 1">
+        <ng-template [ngIf]="!isCalculating">Run</ng-template>
+        <ng-template [ngIf]="isCalculating">Running... </ng-template>
+        <ng-template [ngIf]="isCalculating">
+            <div class="spinner-border text-warning spinner-border-sm" role="status">
+                 <span class="sr-only">Running...</span>
+            </div>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="votingType === 'standard' && isTaskDone && !isCalculating" class="component">
+    <app-standard-voting></app-standard-voting>
+  </div>
+
+  <div *ngIf="votingType === 'instantrunoff' && isTaskDone && !isCalculating" class="component">
+    <app-instantrunoff-voting ></app-instantrunoff-voting>
+  </div>
+
+</div>
