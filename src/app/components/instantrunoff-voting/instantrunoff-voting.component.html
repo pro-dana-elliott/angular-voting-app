@@ -1,0 +1,62 @@
+  <div>
+    <div class="row">
+      <div class="col-12">
+        <h3><label>Raked Voting</label></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h2><label>Instant-runoff Results</label></h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <label>Candidates:&nbsp;{{candidatesService.numberOfCandidates}}</label>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+          <label>50% cut off votes:&nbsp;{{instantRunoffVotingService.instantRunoffCutoffAmount | number:'1.0-0'}}</label>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+    <table class="table table-borderless table-sm">
+      <thead>
+        <tr>
+          <th class="text-center">Name</th>
+          <th class="text-center" attr.colspan="{{candidatesService.getCandidate(0).instantRunoffData.length}}">Votes/Round</th>
+          <th class="text-center">Chart Votes/Round</th>
+        </tr>
+        <tr>
+          <th class="text-center">&#8610;</th>
+          <th scope="col" *ngFor="let rounds of candidatesService.getCandidate(0).instantRunoffData; let i = index">
+            <div class="text-center"
+                 [ngStyle]="{backgroundColor: instantRunoffVotingService.colors[i]}">{{i + 1}}
+            </div>
+          </th>
+          <th class="text-center">&#8611;&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let candidate of candidatesService">
+            <td>{{candidate.name}}</td>
+              <td *ngFor="let votes of candidate.instantRunoffData; let i = index"
+                [ngClass]="{winner : instantRunoffVotingService.MaxInstantRunoffVote() === votes.instantRunoffVote }">{{votes.instantRunoffVote | number:'1.0-0'}}</td>
+              <td>
+                 <div class="progress">
+                     <div *ngFor="let votes of candidate.instantRunoffData; let i = index"
+                           class="progress-bar" role="progressbar"
+                          [ngStyle]="{width: percentOfVote(votes.instantRunoffVote,votersService.numberOfVoters) + '%',
+                           backgroundColor: instantRunoffVotingService.colors[i] }"
+                          attr.aria-valuenow="{{percentOfVote(votes.instantRunoffVote,votersService.numberOfVoters)}}"
+                          aria-valuemin="0" aria-valuemax="100">
+<!--                          <ng-template [ngIf]="votes.instantRunoffVote > 0">{{votes.instantRunoffVote | number:'1.0-0'}}</ng-template>-->
+                     </div>
+                 </div>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+    </div>
+</div>

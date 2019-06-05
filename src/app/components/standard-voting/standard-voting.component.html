@@ -1,0 +1,38 @@
+  <div>
+    <div class="row">
+      <div class="col-12">
+        <h3><label>Standard voting Results</label></h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <label>Candidates:&nbsp;{{candidatesService.numberOfCandidates}}</label>
+      </div>
+    </div>
+
+    <div class="row header-row">
+       <div class="col-4 col-sm-4 col-md-3">Name
+       </div>
+       <div class="col-2 col-sm-2 col-md-2">Votes
+       </div>
+       <div class="col">Percentage
+       </div>
+    </div>
+
+    <div class="row" *ngFor="let candidate of candidatesService">
+       <div class="col-4 col-sm-4 col-md-3">{{candidate.name}}</div>
+       <div class="col-2 col-sm-2 col-md-2">{{candidate.standardVote}}</div>
+       <div class="col">
+         <div class="progress">
+           <div class="progress-bar" role="progressbar"
+                [ngStyle]="{width: percentOfVote(candidate.standardVote,voterService.numberOfVoters) + '%'}"
+                attr.aria-valuenow="{{percentOfVote(candidate.standardVote,voterService.numberOfVoters)}}"
+                aria-valuemin="0" aria-valuemax="100"
+                [ngClass]="{winner: standardVotingService.MaxStandardVote() === candidate.standardVote}">
+                {{percentOfVote(candidate.standardVote,voterService.numberOfVoters) + '%'}}
+           </div>
+         </div>
+       </div>
+    </div>
+  </div>
