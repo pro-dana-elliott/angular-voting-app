@@ -41,7 +41,7 @@ describe('CandidateInfoComponent', () => {
   })
 
   class TestHostComponent {
-    @ViewChild(CandidateInfoComponent)
+    @ViewChild(CandidateInfoComponent, /* TODO: add static flag */ { static: true})
     public componentUnderTest: CandidateInfoComponent;
       candidateTest = new CandidateModel('test', 10, []);
   }
