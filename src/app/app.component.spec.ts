@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -10,7 +10,7 @@ import {CandidateInfoComponent} from './components/candidate-info/candidate-info
 
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [BrowserModule, FormsModule ],
       declarations: [
